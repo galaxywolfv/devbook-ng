@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { Book, Role } from '@/lib/types';
 import { BooksService } from '../books.service';
 import { AuthenticationService } from '../auth/authentication.service';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-books',
@@ -16,12 +17,25 @@ export class BooksComponent implements OnInit {
   books: Book[] = [];
   showModal: boolean = false;
   selectedBook: Book | undefined;
+  Role = Role;
 
   constructor(
     private router: Router,
     private booksService: BooksService,
-    private authService: AuthenticationService // Inject the AuthenticationService
-  ) { }
+    private authService: AuthenticationService,
+    private titleService: Title
+  ) {
+    this.updateTitle();
+  }
+  updateTitle() {
+    if (this.router.url === '/') {
+      this.titleService.setTitle('devbook');
+    } else if (this.router.url === '/books') {
+      this.titleService.setTitle('Explore - devbook');
+    }
+    // Add more conditions for other routes as needed
+  }
+
 
   ngOnInit(): void {
     const token = this.authService.getToken();

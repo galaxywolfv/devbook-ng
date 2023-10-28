@@ -1,41 +1,91 @@
 <nav class="bg-white dark:bg-gray-900 fixed w-full z-20 top-0 left-0 border-b border-gray-200 dark:border-gray-600">
-  <div class="flex flex-wrap items-center justify between mx-auto p-4">
+  <div class="flex flex-wrap items-center justify-between mx-auto p-4">
     <a class="flex items-center select-none" [routerLink]="'/'">
-      <img src="assets/android-chrome-512x512.png" class="h-8 mr-3 rounded" alt="devbook logo" />
+      <img src="/assets/android-chrome-512x512.png" class="h-8 mr-3 rounded" alt="devbook logo" />
       <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">devbook</span>
     </a>
     <div class="flex md:order-2">
-      <a [routerLink]="'books/publish'" class="mr-2">
-        <div class="text-white bg-black hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg font-semibold text-sm px-4 py-2 text-center mr-3 md:mr-0 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Publish Book</div>
-      </a>
-      <a (click)="logout()" [routerLink]="'/'">
-        <div class="text-white bg-red-400 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg font-semibold text-sm px-4 py-2 text-center mr-3 md:mr-0 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Logout</div>
-      </a>
-      <a [routerLink]="'auth/login'">
-        <div class="text-white bg-black hover-bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg font-semibold text-sm px-4 py-2 text-center mr-3 md:mr-0 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Get started</div>
-      </a>
-      <button type="button" class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600" aria-controls="navbar-sticky" aria-expanded="false">
+      <ng-container *ngIf="auth && role === Role.author && currentRoute !== '/books/publish'">
+        <a [routerLink]="'/books/publish'" class="mr-2">
+          <div
+            class="text-white bg-black hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg font-semibold text-sm px-4 py-2 text-center mr-3 md:mr-0 dark-bg-blue-600 dark-hover-bg-blue-700 dark-focus-ring-blue-800">
+            Publish Book</div>
+        </a>
+      </ng-container>
+      <ng-template #notLoggedIn>
+        <a [routerLink]="'/auth/login'">
+          <div
+            class="text-white bg-black hover-bg-blue-800 focus:ring-4 focus:outline-none focus-ring-blue-300 rounded-lg font-semibold text-sm px-4 py-2 text-center mr-3 md:mr-0 dark-bg-blue-600 dark-hover-bg-blue-700 dark-focus-ring-blue-800">
+            Get started</div>
+        </a>
+      </ng-template>
+      <ng-container *ngIf="auth; else notLoggedIn">
+        <a (click)="logout()" [routerLink]="'/'">
+          <div
+            class="text-white bg-red-400 hover-bg-blue-800 focus:ring-4 focus:outline-none focus-ring-blue-300 rounded-lg font-semibold text-sm px-4 py-2 text-center mr-3 md:mr-0 dark-bg-blue-600 dark-hover-bg-blue-700 dark-focus-ring-blue-800">
+            Logout</div>
+        </a>
+      </ng-container>
+      <button data-collapse-toggle="navbar-sticky" type="button"
+        class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus-ring-2 focus-ring-gray-200 dark-text-gray-400 dark-hover-bg-gray-700 dark-focus-ring-gray-600"
+        aria-controls="navbar-sticky" aria-expanded="false">
         <span class="sr-only">Open main menu</span>
         <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 17 14">
-          <path [attr.stroke]="'currentColor'" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M1 1h15M1 7h15M1 13h15" />
+          <path [attr.stroke]="auth ? 'currentColor' : 'white'" stroke-linecap="round" stroke-linejoin="round"
+            stroke-width="2" d="M1 1h15M1 7h15M1 13h15" />
         </svg>
       </button>
     </div>
-    <div class="items-center justify-between hidden w-full md:flex md:w-auto md:order-1" id="navbar-sticky">
-      <ul class="flex flex-col p-4 md:p-0 mt-4 font-medium border border-gray-100 rounded-lg bg-gray-50 md:flex-row md:space-x-8 md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
-        <li>
-          <a [routerLink]="'/'" class="block rounded md:p-0 text-lg font-semibold">Home</a>
-        </li>
-        <li>
-          <a [routerLink]="'books'" class="block rounded md:p-0 text-lg font-semibold">Explore</a>
-        </li>
-        <li>
-          <a [routerLink]="'published-books'" class="block rounded md:p-0 text-lg font-semibold">Published Books</a>
-        </li>
-        <li>
-          <a [routerLink]="'reading-list'" class="block rounded md:p-0 text-lg font-semibold">Reading List</a>
-        </li>
-      </ul>
-    </div>
+    <ng-container *ngIf="auth">
+      <div class="items-center justify-between hidden md:flex md:w-auto md:order-1" id="navbar-sticky">
+        <ul
+          class="flex flex-col p-4 md:p-0 font-medium border border-gray-100 rounded-lg bg-gray-50 md:flex-row md:space-x-8 md:mt-0 md:border-0 md:bg-white dark-bg-gray-800 md:dark-bg-gray-900 dark-border-gray-700">
+          <li>
+            <a [routerLink]="'/'" class="block rounded md:p-0 text-lg font-semibold" [ngClass]="{
+              'text-blue-700': currentRoute === '/',
+              'text-gray-900': currentRoute !== '/',
+              'hover-text-blue-700': currentRoute !== '/',
+              'dark-hover-text-blue-700': currentRoute !== '/'
+              }">
+              Home
+            </a>
+
+          </li>
+          <li>
+            <a [routerLink]="'/books'" class="block rounded md-p-0 text-lg font-semibold" [ngClass]="{
+                'text-blue-700': currentRoute === '/books',
+                'text-gray-900': currentRoute !== '/books',
+                'hover-text-blue-700': currentRoute !== '/books',
+                'dark-hover-text-blue-700': currentRoute !== '/books'
+              }">
+              Explore
+            </a>
+          </li>
+          <ng-container *ngIf="role === Role.author">
+            <li>
+              <a [routerLink]="'/published-books'" class="block rounded md-p-0 text-lg font-semibold" [ngClass]="{
+                  'text-blue-700': currentRoute === '/published-books',
+                  'text-gray-900': currentRoute !== '/published-books',
+                  'hover-text-blue-700': currentRoute !== '/published-books',
+                  'dark-hover-text-blue-700': currentRoute !== '/published-books'
+                }">
+                Published Books
+              </a>
+            </li>
+          </ng-container>
+          <li>
+            <a [routerLink]="'/reading-list'" class="block rounded md-p-0 text-lg font-semibold" [ngClass]="{
+                'text-blue-700': currentRoute === '/reading-list',
+                'text-gray-900': currentRoute !== '/reading-list',
+                'hover-text-blue-700': currentRoute !== '/reading-list',
+                'dark-hover-text-blue-700': currentRoute !== '/reading-list'
+              }">
+              Reading List
+            </a>
+          </li>
+
+        </ul>
+      </div>
+    </ng-container>
   </div>
 </nav>

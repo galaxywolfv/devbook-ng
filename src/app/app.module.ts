@@ -13,7 +13,7 @@ import { RegisterComponent } from './auth/register/register.component';
 import { PublishComponent } from './books/publish/publish.component';
 import { EditComponent } from './books/edit/edit.component';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
@@ -35,6 +35,7 @@ import { HttpClientModule } from '@angular/common/http';
     AppRoutingModule,
     CommonModule,
     FormsModule,
+    ReactiveFormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

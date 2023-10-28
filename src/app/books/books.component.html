@@ -31,7 +31,7 @@
           </td>
 
           <td class="flex items-center justify-end px-3 py-2 space-x-3">
-            <ng-container *ngIf="role === 1 && username === book.author">
+            <ng-container *ngIf="role === Role.author && username === book.author">
               <a [routerLink]="'/books/edit/' + book._id">
                 <button
                   class="flex p-2.5 bg-yellow-500 rounded-xl hover:rounded-3xl hover:bg-yellow-600 transition-all duration-300 text-white">
@@ -45,7 +45,7 @@
               </a>
             </ng-container>
 
-            <ng-container *ngIf="(role === 0 || (role === 1 && username === book.author))">
+            <ng-container *ngIf="(role === Role.admin || (role === Role.author && username === book.author))">
               <button (click)="handleDeleteBook(book._id, book.author)"
                 class="flex p-2.5 bg-red-500 rounded-xl hover:rounded-3xl hover:bg-red-600 transition-all duration-300 text-white">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"

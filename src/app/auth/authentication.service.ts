@@ -37,8 +37,12 @@ export class AuthenticationService {
     return this.http.post<any>(`${config.api}/user/login`, data).pipe(
       tap((response) => {
         localStorage.setItem('token', response);
-        this.authSubject.next(true);
-        this.router.navigate(['/']);
+        this.fetchSelf(response).subscribe((res) => {
+          this.authSubject.next(true)
+          this.roleSubject.next(res.role);
+          this.usernameSubject.next(res.username);
+          this.router.navigate(['/']);
+        });
       })
     );
   }
@@ -57,8 +61,10 @@ export class AuthenticationService {
 
   logout(): void {
     localStorage.removeItem('token');
-    this.authSubject.next(false);
-    this.router.navigate(['/auth/login']);
+    this.authSubject.next(false); // Update the auth status to false
+    this.roleSubject.next(Role.default); // Reset the role to the default
+    this.usernameSubject.next(''); // Reset the username
+    this.router.navigate(['']);
   }
 
   // Add a method to get the token
@@ -82,6 +88,7 @@ export class AuthenticationService {
       }
     }).pipe(
       tap((response) => {
+        this.authSubject.next(true)
         this.roleSubject.next(response.role);
         this.usernameSubject.next(response.username);
       }),
