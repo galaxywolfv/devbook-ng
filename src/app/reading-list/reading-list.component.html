@@ -1,1 +1,49 @@
-<p>reading-list works!</p>
+<div class="w-full flex justify-center">
+  <div class="max-w-5xl w-full relative overflow-x-auto shadow-md sm:p-2 mt-20">
+    <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+      <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+        <tr>
+          <th scope="col" class="px-6 py-4 whitespace-nowrap">
+            Title
+          </th>
+          <th scope="col" class="px-6 py-4 whitespace-nowrap">
+            Description
+          </th>
+          <th scope="col" class="px-6 py-4 whitespace-nowrap">
+            Author
+          </th>
+          <th scope="col" class="px-6 py-4 whitespace-nowrap text-right">
+            Actions
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let book of books"
+          class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover-bg-gray-600">
+          <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+            {{ book.title }}
+          </th>
+          <td class="px-6 py-4 whitespace-nowrap">
+            {{ book.description }}
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <a [routerLink]="'/published-books/' + book.author">{{ book.author }}</a>
+          </td>
+
+          <td class="flex items-center justify-end px-3 py-2 space-x-3">
+            <button (click)="addToList(book)"
+              class="flex p-2.5 bg-red-500 rounded-xl hover:rounded-3xl hover:bg-blue-600 transition-all duration-300 text-white">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                  d="M3 3l1.664 1.664M21 21l-1.5-1.5m-5.485-1.242L12 17.25 4.5 21V8.742m.164-4.078a2.15 2.15 0 011.743-1.342 48.507 48.507 0 0111.186 0c1.1.128 1.907 1.077 1.907 2.185V19.5M4.664 4.664L19.5 19.5">
+                </path>
+              </svg>
+            </button>
+          </td>
+
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

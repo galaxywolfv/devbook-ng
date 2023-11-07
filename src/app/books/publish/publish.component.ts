@@ -3,6 +3,7 @@ import { Title } from '@angular/platform-browser';
 import { Role, Book } from '@/lib/types';
 import { AuthenticationService } from '../../auth/authentication.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { BookService } from '../../book.service';
 
 @Component({
   selector: 'app-publish',
@@ -19,10 +20,9 @@ export class PublishComponent {
 
   publishForm: FormGroup;
 
-  constructor(private authService: AuthenticationService, private titleService: Title, private formBuilder: FormBuilder) {
+  constructor(private authService: AuthenticationService, private bookService: BookService, private titleService: Title, private formBuilder: FormBuilder) {
     this.titleService.setTitle('Publish Book - devbook');
     this.initializeData();
-    this.createForm();
     this.publishForm = this.formBuilder.group({
       title: ['', [Validators.required]],
       description: ['', [Validators.required]],
@@ -41,18 +41,13 @@ export class PublishComponent {
     }
   }
 
-  createForm() {
-    this.publishForm = this.formBuilder.group({
-      title: ['', Validators.required],
-      description: ['', Validators.required]
-    });
-  }
-
   handleCreateBook(): void {
     if (this.auth && this.role === Role.author && this.publishForm.valid) {
       // You can access the form values using this.publishForm.value
       const { title, description } = this.publishForm.value;
-      // hier serviec maken
+      console.log(title, description);
+
+      this.bookService.createBook(title, description).subscribe();
     }
   }
 }

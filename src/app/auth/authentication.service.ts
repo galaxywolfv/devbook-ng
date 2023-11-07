@@ -94,7 +94,7 @@ export class AuthenticationService {
       }),
       catchError((error) => {
         console.error('Error fetching user info:', error);
-        return throwError(error);
+        return throwError(() => error);
       })
     );
   }

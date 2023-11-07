@@ -4,6 +4,8 @@ import { Book, Role } from '@/lib/types';
 import { BooksService } from '../books.service';
 import { AuthenticationService } from '../auth/authentication.service';
 import { Title } from '@angular/platform-browser';
+import { BookService } from '../book.service';
+import { SavedBooksService } from '../saved-books.service';
 
 @Component({
   selector: 'app-books',
@@ -15,27 +17,16 @@ export class BooksComponent implements OnInit {
   role: Role = Role.default;
   username: string = '';
   books: Book[] = [];
-  showModal: boolean = false;
   selectedBook: Book | undefined;
   Role = Role;
 
   constructor(
-    private router: Router,
+    private bookService: BookService,
     private booksService: BooksService,
+    private savedBooksService: SavedBooksService,
     private authService: AuthenticationService,
-    private titleService: Title
   ) {
-    this.updateTitle();
   }
-  updateTitle() {
-    if (this.router.url === '/') {
-      this.titleService.setTitle('devbook');
-    } else if (this.router.url === '/books') {
-      this.titleService.setTitle('Explore - devbook');
-    }
-    // Add more conditions for other routes as needed
-  }
-
 
   ngOnInit(): void {
     const token = this.authService.getToken();
@@ -63,29 +54,20 @@ export class BooksComponent implements OnInit {
     }
   }
 
-
-  toggleModal(book: Book): void {
-    if (book) {
-      this.selectedBook = book;
-      this.showModal = !this.showModal;
-    }
-  }
-
   async handleDeleteBook(bookId: string, author: string): Promise<void> {
     if (this.auth && ((this.role === Role.admin) || (this.role === Role.author && this.username === author))) {
       // Implement your delete book logic using your service
       // For example:
       // await this.bookService.deleteBook(bookId);
       // Fetch books after deletion
+      this.bookService.deleteBook(bookId).subscribe()
       this.fetchBooks();
     }
   }
 
   async addToList(book: Book): Promise<void> {
     if (this.auth) {
-      // Implement your add to list logic using your service
-      // For example:
-      // await this.savedBooksService.updateList(book);
+      this.savedBooksService.updateList(book).subscribe();
     }
   }
 
